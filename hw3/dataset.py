@@ -98,7 +98,7 @@ class TwitterDataset(Dataset):
         label_column = 1 if task == 'pos' else 3
 
         # read the dataset file, extracting tokens and tags
-        with open(dataset_file, 'r') as f:
+        with open(dataset_file, 'r', encoding="utf8") as f:
             tokens, tags = [], []
             for line in f:
                 elements = line.strip().split('\t')

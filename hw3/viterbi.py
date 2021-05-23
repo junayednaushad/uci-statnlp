@@ -24,9 +24,27 @@ def run_viterbi(emission_scores, trans_scores, start_scores, end_scores):
     assert emission_scores.shape[1] == L
     N = emission_scores.shape[0]
 
+    viterbi = np.ones((N,L)) * -np.inf
+    viterbi[0, : ] = start_scores + emission_scores[0, : ]
+    back_pointer = np.zeros((N,L))
+
+    for i in range(1,N):
+        for j in range(L):
+            for k in range(L):
+                score = viterbi[i-1, k] + emission_scores[i, j] + trans_scores[k, j]
+                if score > viterbi[i, j]:
+                    viterbi[i, j] = score
+                    back_pointer[i, j] = k
+
+    viterbi[N-1, : ] += end_scores
     y = []
-    for i in range(N):
-        # stupid sequence
-        y.append(i % L)
-    # score set to 0
-    return (0.0, y)
+    y.append(np.argmax(viterbi[N-1, : ]))
+    s = viterbi[N-1, int(y[0])]
+
+    for i in range(1, N):
+        prev_lbl = int(y[-1])
+        y.append(back_pointer[N-i, prev_lbl])
+    
+    y.reverse()
+
+    return (s, y)

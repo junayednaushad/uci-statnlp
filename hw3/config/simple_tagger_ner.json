@@ -11,10 +11,15 @@
   "model": {
     "type": "simple_tagger.SimpleTagger",
     "embeddings": {
-      "embedding_dim": 50
+      "embedding_dim": 50,
+      "embedding_path": "./embeddings/glove.6B.50d.txt"
     },
     "encoder": {
-      "type": null
+      "type": "torch.nn.GRU",
+      "input_size": 50,
+      "hidden_size": 25,
+      "num_layers": 2,
+      "bidirectional": true
     },
     "tag_projection": {
       "type": "torch.nn.Linear",
